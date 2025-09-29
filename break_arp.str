@@ -1,17 +1,42 @@
+// load up a sample library from github
 samples('github:yaxu/clean-breaks')
 setcps(155/60/4)
 
+// variables let you re-use stuff elsewhere
 let the_chords = "<Cm Dm Bb Gm>"
 
+// grab the amen break, slow it down 4x because it covers 4 measures of music
+// fit it to "one cycle" but it's divided by 4
 $: s("amen/4").fit()
+// cut up the amen break into 8 pieces and play it kinda wildly
 .slice(8, "<6 1 2 3 4*2 5 6 [6 7]>*2")
+// cut stops all samples in group 1 from overlapping
+// sometimesBy lets you choose a weighting for the random action
+// of "play twice"
 .cut(1).sometimesBy(0.1, ply("2"))
+// also added a "go backwards"
 .sometimesBy(.2, mul(speed("-1")))
+// and a "go faster"
 .sometimesBy(.15, mul(speed("1.25")))
+// distort the sounds and decrease volume
 .distort("2:2").gain(0.15)
 
+// n() takes indices, so this is notes 3 1 2 0 of the chords
+// mode chooses a pitch somehow and voicing makes them make noise?
+// don't fully understand that
 $arp: n("<3 1 2 0 1 0>*12").chord(the_chords).mode("above:c3").voicing()
+// I forget what clip does, but supersaw is the synth used
+// gain to quiet it down
+// lpenv to shape low-pass envelope (I don't know this)
+// room and roomsize add reverb
 .clip(1.5).s("supersaw").gain(0.4).lpenv(2).room(1).roomsize(3)
+// low-pass filters makes sawtooths smoother somehow
 .lpf(200)
+
+// this is a loud bassdrum that also ducks out other audio on the same channel
+// I might have messed that up by not declaring an orbit, I'm still learning
 $ravedrum: s("sbd!4").gain(0.3).duck("2:3:4").duckattack(0.2).duckdepth(0.8).distort("2.3:.3")
+
+// try to play the root note of the chords, but I think I forgot
+// to make this at the same speed as the arpeggios
 $bass: n("0").chord(the_chords).s("sine").mode("above:c2").voicing().distort("1.5:3")._pianoroll()
