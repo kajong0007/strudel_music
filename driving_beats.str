@@ -1,0 +1,16 @@
+setCps(120/60/4)
+
+$: s("supersaw").note("<c1@3 c2@2 f1 g1 Bb1>")
+  .phaser(chooseCycles("1","8","3","5")).fast(8).lpf("600")
+  .distort("0.9:1.2")
+
+$: s("[bd sd [~ bd] sd]").bank("tr909")
+$: s("[hh hh hh hh]").bank("tr909")
+  .sometimesBy(0.2, ply("2"))
+  .sometimesBy(0.1, ply("7"))
+
+$: n(irand(7).add(3))
+  .seg(wchooseCycles(["8", 6],["6",4],["12",1]).fast(2))
+  .s("tri")
+  .scale("c:minor")
+  ._pianoroll()
